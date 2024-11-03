@@ -97,7 +97,9 @@ let components = {
   a: CustomLink,
   code: Code,
   Table,
-  CPUChart: React.lazy(() => import("./simulations")),
+  Sim: React.lazy(() => import("./new-sim")),
+  GlobalSim: React.lazy(() => import("./new-global-sim")),
+  TreeSim: React.lazy(() => import("./new-tree-sim")),
 };
 
 export function CustomMDX(props) {

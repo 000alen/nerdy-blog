@@ -1,134 +1,51 @@
-"use client";
+// SimulationSection.tsx
+import React from "react";
+import DFAComponent from "./dfa";
+import NFAComponent from "./nfa";
+import { DFA, NFA } from "app/lib/types";
+import BacktrackingSimulation from "./backtracking-simulation";
 
-import React, { useState, useEffect } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-// import "./App.css"; // Assuming CSS for custom animations and styles
-// import "./Simulation.css"; // CSS specifically for the grid and animations
-
-// Mock data for CPU usage before, during, and after the RegEx deployment
-const cpuData = [
-  { time: "13:30", CPU: 40 },
-  { time: "13:40", CPU: 45 },
-  { time: "13:50", CPU: 95 }, // Spiking during deployment
-  { time: "14:00", CPU: 100 }, // Peak failure time
-  { time: "14:10", CPU: 50 },
-  { time: "14:20", CPU: 30 },
-];
-
-const CPUChart = () => {
-  return (
-    <ResponsiveContainer width="100%" height={400}>
-      <LineChart
-        data={cpuData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="time" />
-        <YAxis
-          label={{ value: "CPU Usage (%)", angle: -90, position: "insideLeft" }}
-        />
-        <Tooltip />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="CPU"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+const dfaExample: DFA = {
+  states: [
+    { id: "q0", transitions: { x: "q1", "=": "q0" }, isAccepting: false },
+    { id: "q1", transitions: { "=": "q2" }, isAccepting: true },
+    { id: "q2", transitions: {}, isAccepting: true },
+  ],
+  startState: "q0",
+  alphabet: ["x", "="],
 };
 
-export default CPUChart;
+const nfaExample: NFA = {
+  states: [
+    {
+      id: "p0",
+      transitions: { x: ["p1", "p0"], "=": ["p2"] },
+      isAccepting: false,
+    },
+    { id: "p1", transitions: { "=": ["p2"] }, isAccepting: false },
+    { id: "p2", transitions: { x: ["p1"] }, isAccepting: true },
+  ],
+  startState: "p0",
+  alphabet: ["x", "="],
+};
 
-export const RegexBacktrackingDemo = () => {
-  const [input, setInput] = useState("x=x");
-  const [steps, setSteps] = useState(0);
-  const [simulationData, setSimulationData] = useState([]);
-  const [currentStep, setCurrentStep] = useState(0);
-
-  useEffect(() => {
-    if (simulationData.length > 0 && currentStep < simulationData.length) {
-      const timer = setTimeout(() => {
-        setCurrentStep((prev) => prev + 1);
-      }, 500); // Adjust speed of the animation
-
-      return () => clearTimeout(timer);
-    }
-  }, [simulationData, currentStep]);
-
-  const calculateBacktracking = (input) => {
-    let steps = 0;
-    const regex = /.*.*=.*/;
-    const data = [];
-
-    // Simulate backtracking by counting checks (detailed simulation)
-    for (let i = 0; i < input.length; i++) {
-      for (let j = i; j <= input.length; j++) {
-        steps++;
-        data.push({
-          position: `(${i}, ${j})`,
-          steps: steps,
-          highlight: i === currentStep || j === currentStep,
-        });
-        if (regex.test(input.slice(i, j))) break;
-      }
-    }
-    setSteps(steps);
-    setSimulationData(data);
-    setCurrentStep(0);
-  };
-
+const SimulationSection: React.FC = () => {
   return (
     <div>
-      <h3>Backtracking Simulation</h3>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => {
-          setInput(e.target.value);
-          calculateBacktracking(e.target.value);
-        }}
-      />
-      <p>
-        Input Length: {input.length} | Estimated Steps: {steps}
-      </p>
-      <div className="simulation-grid">
-        {simulationData.map((point, index) => (
-          <div
-            key={index}
-            className={`grid-point ${currentStep === index ? "highlight" : ""}`}
-            title={`Step ${point.steps}: ${point.position}`}
-          >
-            ■
-          </div>
-        ))}
-      </div>
-      <p>
-        Explanation: Each additional character significantly increases the
-        number of potential checks. The highlighted cells show the current step
-        being processed.
-      </p>
+      <section>
+        <h2>DFA Simulation</h2>
+        <DFAComponent dfa={dfaExample} />
+      </section>
+      <section>
+        <h2>NFA Simulation</h2>
+        <NFAComponent nfa={nfaExample} />
+      </section>
+      <section>
+        <h2>Backtracking Simulation</h2>
+        <BacktrackingSimulation regex=".*.*=.*" input="x=xx" />
+      </section>
     </div>
   );
 };
 
-const App = () => {
-  return (
-    <div>
-      <h2>Cloudflare Outage Interactive Visuals</h2>
-      <CPUChart />
-      <RegexBacktrackingDemo />
-    </div>
-  );
-};
+export default SimulationSection;

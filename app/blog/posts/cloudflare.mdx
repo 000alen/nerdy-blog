@@ -23,9 +23,9 @@ This pattern’s nested structure led to significant backtracking when processin
 
 ### Understanding Backtracking and Computational Complexity
 
-<CPUChart />
+<Sim />
 
-Backtracking in RegEx engines occurs when a match attempt fails, prompting the engine to reconsider previous choices and explore alternative matches. This is especially problematic when using patterns like `.*` because the engine tries to match all possibilities before concluding that no match is found. The backtracking process has exponential time complexity, often denoted as O(2^n), where n is the length of the input string.
+Backtracking in RegEx engines occurs when a match attempt fails, prompting the engine to reconsider previous choices and explore alternative matches. This is especially problematic when using patterns like `.*` because the engine tries to match all possibilities before concluding that no match is found. The backtracking process has exponential time complexity, often denoted as `O(2^n)`, where n is the length of the input string.
 
 To illustrate, consider the pattern `.*.*=.*` matching a string like `x=xx`. The RegEx engine:
 
@@ -34,18 +34,23 @@ To illustrate, consider the pattern `.*.*=.*` matching a string like `x=xx`. The
 3. Fails to match `=`, so it backtracks and retries with different groupings.  
 4. This process repeats, exploring multiple paths before a successful match or failure.
 
+<TreeSim />
+
 With each additional character, the number of potential paths grows, resulting in exponential growth in processing time—a concept similar to traversing the branches of a binary tree.
+
 
 ### Finite Automata and Efficient Pattern Matching
 
 Finite Automata (FA) provide an elegant solution to the limitations of traditional backtracking-based RegEx engines. The two main types are:
 
-- **Deterministic Finite Automaton (DFA)**: Processes each input symbol exactly once, ensuring linear time complexity O(n). DFAs have no backtracking since they always know which state to move to based on the current input.  
+- **Deterministic Finite Automaton (DFA)**: Processes each input symbol exactly once, ensuring linear time complexity `O(n)`. DFAs have no backtracking since they always know which state to move to based on the current input.  
 - **Non-Deterministic Finite Automaton (NFA)**: Can transition into multiple states simultaneously, representing all potential matches at once. This parallel processing allows NFAs to mimic backtracking without the computational cost.
 
 The power of finite automata lies in their predictable time complexity, making them suitable for high-performance applications. Ken Thompson’s 1968 algorithm for converting RegEx into an NFA paved the way for linear-time pattern matching, a crucial consideration for modern applications handling large data volumes.
 
 ### How Catastrophic Backtracking Unfolded at Cloudflare
+
+<GlobalSim />
 
 The expression `.*.*=.*` was part of a broader rule designed to catch complex XSS payloads. While it was syntactically valid, the combination of wildcards and nesting created a situation where the RegEx engine had to attempt a vast number of permutations to find matches.
 
