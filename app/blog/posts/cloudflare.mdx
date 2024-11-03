@@ -23,6 +23,8 @@ This pattern’s nested structure led to significant backtracking when processin
 
 ### Understanding Backtracking and Computational Complexity
 
+<CPUChart />
+
 Backtracking in RegEx engines occurs when a match attempt fails, prompting the engine to reconsider previous choices and explore alternative matches. This is especially problematic when using patterns like `.*` because the engine tries to match all possibilities before concluding that no match is found. The backtracking process has exponential time complexity, often denoted as O(2^n), where n is the length of the input string.
 
 To illustrate, consider the pattern `.*.*=.*` matching a string like `x=xx`. The RegEx engine:
