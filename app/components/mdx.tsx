@@ -98,8 +98,13 @@ let components = {
   code: Code,
   Table,
   Sim: React.lazy(() => import("./new-sim")),
-  GlobalSim: React.lazy(() => import("./new-global-sim")),
   TreeSim: React.lazy(() => import("./new-tree-sim")),
+
+  Simulation: React.lazy(() => import("./model")),
+  Params: React.lazy(() => import("./model/params")),
+  Rejection: React.lazy(() => import("./model/rejection")),
+  Latency: React.lazy(() => import("./model/latency")),
+  Demand: React.lazy(() => import("./model/demand-capacity")),
 };
 
 export function CustomMDX(props) {

@@ -50,15 +50,25 @@ The power of finite automata lies in their predictable time complexity, making t
 
 ### How Catastrophic Backtracking Unfolded at Cloudflare
 
-<GlobalSim />
+<Simulation>
+
+<Params />
 
 The expression `.*.*=.*` was part of a broader rule designed to catch complex XSS payloads. While it was syntactically valid, the combination of wildcards and nesting created a situation where the RegEx engine had to attempt a vast number of permutations to find matches.
 
+<Demand />
+
 **Before the Change**: Cloudflare’s WAF was functioning with existing rules that, although less aggressive, were optimized for performance. The implementation of RegEx patterns at this stage was well-vetted and tested for efficiency.
+
+<Latency />
 
 **The Change**: The new rule aimed for greater sensitivity to threats but inadvertently introduced catastrophic backtracking. The deployment process, governed by Cloudflare’s rapid Quicksilver system, pushed this change globally within seconds, overwhelming servers with CPU-intensive operations.
 
+<Rejection />
+
 **The Incident**: Servers across the network hit maximum CPU usage, leading to widespread failures. The outage was initially mistaken for an attack but was soon identified as a WAF rule issue.
+
+</Simulation>
 
 ### Visualizing Before and After
 
