@@ -18,7 +18,7 @@ const LatencySim: React.FC = () => {
 
   return (
     <div style={{ marginBottom: "40px" }}>
-      <h3>Processing Latency Over Time</h3>
+      <h4>Processing Latency Over Time</h4>
       <ResponsiveContainer width="100%" height={500}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />

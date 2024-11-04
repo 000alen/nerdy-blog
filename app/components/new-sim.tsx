@@ -117,19 +117,22 @@ const NFA_DFAComparison: React.FC = () => {
   }, [inputSize]);
 
   return (
-    <div>
-      <h2>NFA vs DFA Compute Steps Comparison</h2>
-      <label>
-        Input Size:
-        <input
-          type="range"
-          min="1"
-          max="50"
-          value={inputSize}
-          onChange={(e) => setInputSize(parseInt(e.target.value, 10))}
-        />
-        {inputSize}
-      </label>
+    <div style={{ marginBottom: "40px" }}>
+      <h4>NFA vs DFA Compute Steps Comparison</h4>
+
+      <div>
+        <label>
+          Input Size:
+          <input
+            type="range"
+            min="1"
+            max="50"
+            value={inputSize}
+            onChange={(e) => setInputSize(parseInt(e.target.value, 10))}
+          />
+          {inputSize}
+        </label>
+      </div>
 
       <ResponsiveContainer width="100%" height={500}>
         <LineChart

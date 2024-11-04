@@ -87,20 +87,23 @@ const NFAComputationTree: React.FC = () => {
   }, [inputSize]);
 
   return (
-    <div>
-      <h2>NFA Computation Tree Visualization</h2>
-      <label>
-        Input Size:
-        <input
-          type="range"
-          min="1"
-          max="20"
-          value={inputSize}
-          onChange={(e) => setInputSize(parseInt(e.target.value, 10))}
-        />
-        {inputSize}
-      </label>
-      <p>Total Nodes: {nodeCount}</p>
+    <div style={{ marginBottom: "40px" }}>
+      <h4>NFA Computation Tree Visualization (nodes: {nodeCount})</h4>
+
+      <div>
+        <label>
+          Input Size:
+          <input
+            type="range"
+            min="1"
+            max="20"
+            value={inputSize}
+            onChange={(e) => setInputSize(parseInt(e.target.value, 10))}
+          />
+          {inputSize}
+        </label>
+      </div>
+
       <div style={{ width: "100%", height: "500px" }}>
         {computationTree && (
           <Tree

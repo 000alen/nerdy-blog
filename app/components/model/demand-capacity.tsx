@@ -18,7 +18,7 @@ const DemandCapacitySim: React.FC = () => {
 
   return (
     <div style={{ marginBottom: "40px" }}>
-      <h3>Compute Demand vs. Capacity Over Time</h3>
+      <h4>Compute Demand vs. Capacity Over Time</h4>
       <ResponsiveContainer width="100%" height={500}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
