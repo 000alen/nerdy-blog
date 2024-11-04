@@ -383,9 +383,9 @@ const DifferentialEquationSimulation: React.FC = () => {
       </div>
 
       {/* Number of Requests in the System */}
-      <div style={{ marginBottom: "40px" }}>
+      {/* <div style={{ marginBottom: "40px" }}>
         <h3>Number of Requests in the System Over Time</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={500}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
@@ -417,12 +417,12 @@ const DifferentialEquationSimulation: React.FC = () => {
             />
           </LineChart>
         </ResponsiveContainer>
-      </div>
+      </div> */}
 
       {/* Compute Demand vs. Capacity */}
       <div style={{ marginBottom: "40px" }}>
         <h3>Compute Demand vs. Capacity Over Time</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={500}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
@@ -463,7 +463,7 @@ const DifferentialEquationSimulation: React.FC = () => {
       {/* Processing Latency */}
       <div style={{ marginBottom: "40px" }}>
         <h3>Processing Latency Over Time</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={500}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
@@ -508,9 +508,9 @@ const DifferentialEquationSimulation: React.FC = () => {
       </div>
 
       {/* Cumulative Rejected Requests */}
-      <div style={{ marginBottom: "40px" }}>
+      {/* <div style={{ marginBottom: "40px" }}>
         <h3>Cumulative Rejected Requests Over Time</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={500}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
@@ -542,12 +542,12 @@ const DifferentialEquationSimulation: React.FC = () => {
             />
           </LineChart>
         </ResponsiveContainer>
-      </div>
+      </div> */}
 
       {/* Rejection Rates Over Time */}
       <div style={{ marginBottom: "40px" }}>
         <h3>Rejection Rates Over Time</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={500}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
