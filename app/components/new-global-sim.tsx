@@ -11,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useDebounce } from "use-debounce";
 
 interface SimulationState {
   R1: number;
@@ -47,29 +48,54 @@ const DifferentialEquationSimulation: React.FC = () => {
   const [T1_max, setT1Max] = useState<number>(10.0);
   const [T2_max, setT2Max] = useState<number>(10.0);
 
+  // Define debounce delay in milliseconds
+  const DEBOUNCE_DELAY = 500; // Adjust as needed
+
+  // Debounced parameters
+  const [debouncedE1_coefficient] = useDebounce(E1_coefficient, DEBOUNCE_DELAY);
+  const [debouncedE2_coefficient] = useDebounce(E2_coefficient, DEBOUNCE_DELAY);
+  const [debouncedMu_n] = useDebounce(mu_n, DEBOUNCE_DELAY);
+  const [debouncedSigma_n] = useDebounce(sigma_n, DEBOUNCE_DELAY);
+  const [debouncedC] = useDebounce(C, DEBOUNCE_DELAY);
+  const [debouncedT1_0] = useDebounce(T1_0, DEBOUNCE_DELAY);
+  const [debouncedT2_0] = useDebounce(T2_0, DEBOUNCE_DELAY);
+  const [debouncedLambda1] = useDebounce(lambda1, DEBOUNCE_DELAY);
+  const [debouncedLambda2] = useDebounce(lambda2, DEBOUNCE_DELAY);
+  const [debouncedT1_max] = useDebounce(T1_max, DEBOUNCE_DELAY);
+  const [debouncedT2_max] = useDebounce(T2_max, DEBOUNCE_DELAY);
+
   const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    // Simulation Parameters from state
-    const E1_coef = E1_coefficient; // Coefficient for O(n^2) algorithm
-    const E2_coef = E2_coefficient; // Coefficient for O(n) algorithm
+    if (
+      debouncedE1_coefficient === undefined ||
+      debouncedE2_coefficient === undefined
+    )
+      return;
 
-    const mu_n_val = mu_n; // Mean of request size n
-    const sigma_n_val = sigma_n; // Standard deviation of request size n
+    setIsLoading(true);
+
+    // Simulation Parameters from debounced state
+    const E1_coef = debouncedE1_coefficient; // Coefficient for O(n^2) algorithm
+    const E2_coef = debouncedE2_coefficient; // Coefficient for O(n) algorithm
+
+    const mu_n_val = debouncedMu_n; // Mean of request size n
+    const sigma_n_val = debouncedSigma_n; // Standard deviation of request size n
 
     const E1_avg = E1_coef * (mu_n_val ** 2 + sigma_n_val ** 2); // Expected E1 per request
     const E2_avg = E2_coef * mu_n_val; // Expected E2 per request
 
-    const C_val = C; // Total compute capacity
+    const C_val = debouncedC; // Total compute capacity
 
-    const T10 = T1_0; // Base processing time for O(n^2)
-    const T20 = T2_0; // Base processing time for O(n)
+    const T10 = debouncedT1_0; // Base processing time for O(n^2)
+    const T20 = debouncedT2_0; // Base processing time for O(n)
 
-    const lambda1_val = lambda1; // Arrival rate for O(n^2) requests
-    const lambda2_val = lambda2; // Arrival rate for O(n) requests
+    const lambda1_val = debouncedLambda1; // Arrival rate for O(n^2) requests
+    const lambda2_val = debouncedLambda2; // Arrival rate for O(n) requests
 
-    const T1max = T1_max; // Max latency for O(n^2)
-    const T2max = T2_max; // Max latency for O(n)
+    const T1max = debouncedT1_max; // Max latency for O(n^2)
+    const T2max = debouncedT2_max; // Max latency for O(n)
 
     // Simulation Settings
     const t_start = 0;
@@ -134,7 +160,7 @@ const DifferentialEquationSimulation: React.FC = () => {
 
       // Record data for plotting
       data.push({
-        time: t,
+        time: parseFloat(t.toFixed(2)),
         R1: parseFloat(state.R1.toFixed(2)),
         R2: parseFloat(state.R2.toFixed(2)),
         D: parseFloat(D.toFixed(2)),
@@ -149,27 +175,56 @@ const DifferentialEquationSimulation: React.FC = () => {
     }
 
     setChartData(data);
+    setIsLoading(false);
   }, [
-    E1_coefficient,
-    E2_coefficient,
-    mu_n,
-    sigma_n,
-    C,
-    T1_0,
-    T2_0,
-    lambda1,
-    lambda2,
-    T1_max,
-    T2_max,
+    debouncedE1_coefficient,
+    debouncedE2_coefficient,
+    debouncedMu_n,
+    debouncedSigma_n,
+    debouncedC,
+    debouncedT1_0,
+    debouncedT2_0,
+    debouncedLambda1,
+    debouncedLambda2,
+    debouncedT1_max,
+    debouncedT2_max,
   ]);
+
+  // Reset function to restore default parameters
+  const resetParameters = () => {
+    setE1Coefficient(1.0);
+    setE2Coefficient(1.0);
+    setMuN(10.0);
+    setSigmaN(2.0);
+    setC(1000.0);
+    setT1_0(1.0);
+    setT2_0(1.0);
+    setLambda1(50.0);
+    setLambda2(50.0);
+    setT1Max(10.0);
+    setT2Max(10.0);
+  };
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h2>Interactive System Simulation</h2>
 
+      {/* Loading Indicator */}
+      {isLoading && (
+        <div style={{ marginBottom: "20px", color: "blue" }}>
+          Updating simulation...
+        </div>
+      )}
+
       {/* Parameter Sliders */}
       <div style={{ marginBottom: "40px" }}>
         <h3>Adjust Simulation Parameters</h3>
+
+        {/* Reset Button */}
+        <div style={{ marginBottom: "20px" }}>
+          <button onClick={resetParameters}>Reset to Default Parameters</button>
+        </div>
+
         <div className="slider-container">
           <div className="slider-group">
             <label>
@@ -392,14 +447,13 @@ const DifferentialEquationSimulation: React.FC = () => {
             />
             <Line
               type="monotone"
-              dataKey="C"
+              dataKey={() => C}
               name="Compute Capacity C"
               stroke="#82ca9d"
               strokeDasharray="5 5"
               dot={false}
+              // Render a constant line for capacity
               // isUpdateActive={false}
-              // dataKeyPrefix=""
-              // Manually set C as a constant line
               data={chartData.map((d) => ({ ...d, C }))}
             />
           </LineChart>
@@ -447,6 +501,7 @@ const DifferentialEquationSimulation: React.FC = () => {
               stroke="#000000"
               strokeDasharray="3 3"
               dot={false}
+              data={chartData.map((d) => ({ ...d, T_max: T1_max }))}
             />
           </LineChart>
         </ResponsiveContainer>
